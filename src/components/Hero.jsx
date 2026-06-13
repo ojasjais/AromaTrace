@@ -6,7 +6,7 @@ function Hero() {
       </h1>
 
       <p className="mt-4 text-lg">
-        Manage production batches, certificates, and dispatch records in one place.
+        Manage production batches, laboratory certificates, and buyer dispatch records in one place.
       </p>
 
       <button className="mt-6 bg-blue-600 text-white px-4 py-2 rounded">
