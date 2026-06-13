@@ -1,27 +1,27 @@
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+
 import Navbar from "./components/Navbar";
-import Hero from "./components/Hero";
-import Card from "./components/Card";
 import Footer from "./components/Footer";
+
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+import Batches from "./pages/Batches";
+import Login from "./pages/Login";
 
 function App() {
   return (
-    <div>
+    <BrowserRouter>
       <Navbar />
 
-      <Hero />
-
-      <Card
-        title="Batch Management"
-        description="Create and track production batches."
-      />
-
-      <Card
-        title="Certificate Tracking"
-        description="Manage quality certificates and compliance records."
-      />
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/batches" element={<Batches />} />
+        <Route path="/login" element={<Login />} />
+      </Routes>
 
       <Footer />
-    </div>
+    </BrowserRouter>
   );
 }
 
