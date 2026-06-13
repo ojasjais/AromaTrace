@@ -1,8 +1,13 @@
 function Login() {
   return (
-    <div>
-      <h1>Login</h1>
-      <p>Users can log in to access the system.</p>
+    <div className="p-8">
+      <h1 className="text-3xl font-bold mb-4">
+        Login
+      </h1>
+
+      <p>
+        Users can log in to access AromaTrace.
+      </p>
     </div>
   );
 }

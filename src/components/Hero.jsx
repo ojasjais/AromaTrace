@@ -1,13 +1,17 @@
 function Hero() {
   return (
-    <section>
-      <h1>Track Essential Oil Batches with Confidence</h1>
+    <section className="text-center p-10">
+      <h1 className="text-4xl font-bold">
+        Track Essential Oil Batches with Confidence
+      </h1>
 
-      <p>
+      <p className="mt-4 text-lg">
         Manage production batches, certificates, and dispatch records in one place.
       </p>
 
-      <button>Get Started</button>
+      <button className="mt-6 bg-blue-600 text-white px-4 py-2 rounded">
+        Get Started
+      </button>
     </section>
   );
 }
