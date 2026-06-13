@@ -1,22 +1,11 @@
-import Hero from "../components/Hero";
-import Card from "../components/Card";
+<div className="max-w-5xl mx-auto">
+  <Card
+    title="Batch Management"
+    description="Create and track production batches."
+  />
 
-function Home() {
-  return (
-    <>
-      <Hero />
-
-      <Card
-        title="Batch Management"
-        description="Create and track production batches."
-      />
-
-      <Card
-        title="Certificate Tracking"
-        description="Manage quality certificates."
-      />
-    </>
-  );
-}
-
-export default Home;
+  <Card
+    title="Certificate Tracking"
+    description="Manage quality certificates."
+  />
+</div>
