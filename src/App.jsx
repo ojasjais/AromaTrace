@@ -1,3 +1,4 @@
+import { Toaster } from "react-hot-toast";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Navbar from "./components/Navbar";
@@ -11,6 +12,9 @@ import Login from "./pages/Login";
 function App() {
   return (
     <BrowserRouter>
+
+     <Toaster />
+     
       <Navbar />
 
       <Routes>
