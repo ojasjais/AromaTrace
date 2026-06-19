@@ -11,42 +11,44 @@ function Home() {
   const [open, setOpen] = useState(true);
 
   return (
-    <>
-      <Hero />
+    <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white">
+  <Hero />
 
-     <Button
-        variant="primary"
-         size="md"
-         onClick={() => showToast("Batch Added Successfully!")}
-        >
-       Add Batch
-     </Button>
+  <div className="max-w-4xl mx-auto px-4">
+    <Button
+      variant="primary"
+      size="md"
+      onClick={() => showToast("Batch Added Successfully!")}
+    >
+      Add Batch
+    </Button>
 
-      <Input
-        label="Buyer Name"
-        placeholder="Enter buyer name"
-      />
+    <Input
+      label="Buyer Name"
+      placeholder="Enter buyer name"
+    />
 
-      <Loader />
+    <Loader />
 
-      <Modal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-        title="Batch Details"
-      >
-        <p>Rosemary Oil Batch</p>
-      </Modal>
+    <Modal
+      isOpen={open}
+      onClose={() => setOpen(false)}
+      title="Batch Details"
+    >
+      <p>Rosemary Oil Batch</p>
+    </Modal>
 
-      <Card
-        title="Batch Management"
-        description="Create and track production batches."
-      />
+    <Card
+      title="Batch Management"
+      description="Create and track production batches."
+    />
 
-      <Card
-        title="Certificate Tracking"
-        description="Manage quality certificates."
-      />
-    </>
+    <Card
+      title="Certificate Tracking"
+      description="Manage quality certificates."
+    />
+  </div>
+</div>
   );
 }
 

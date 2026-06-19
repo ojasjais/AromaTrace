@@ -1,7 +1,7 @@
 function Hero() {
   return (
     <section className="text-center p-10">
-      <h1 className="text-4xl font-bold">
+      <h1 className="text-2xl md:text-4xl font-bold">
         Track Essential Oil Batches with Confidence
       </h1>
 

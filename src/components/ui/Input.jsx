@@ -17,15 +17,17 @@ function Input({
   error,
 }) {
   return (
-    <div className="mb-4">
-      <label className="block mb-1">{label}</label>
+    <div className="mb-4 max-w-xl">
+      <label className="block mb-1">
+        {label}
+        </label>
 
       <input
         type={type}
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        className="border p-2 w-full rounded"
+        className="w-full border p-2 rounded bg-white dark:bg-gray-800 dark:text-white"
       />
 
       {error && (

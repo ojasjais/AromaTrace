@@ -31,7 +31,9 @@ function Button({
 
   return (
     <button
-      className={`${baseStyle} ${variantStyle} ${sizeStyle}`}
+      className={`${baseStyle} ${variantStyle} ${sizeStyle} ${
+        disabled ? "opacity-50 cursor-not-allowed" : ""
+      }`}
       disabled={disabled}
       onClick={onClick}
     >
