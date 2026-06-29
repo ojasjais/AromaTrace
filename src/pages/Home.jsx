@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
+import { getBatches } from "../api/batches";
 import showToast from "../components/ui/Toast";
-import { useState } from "react";
 import Modal from "../components/ui/Modal";
 import Loader from "../components/ui/Loader";
 import Input from "../components/ui/Input";
@@ -8,7 +9,29 @@ import Hero from "../components/Hero";
 import Card from "../components/Card";
 
 function Home() {
-  const [open, setOpen] = useState(true);
+ const [open, setOpen] = useState(false);
+const [batches, setBatches] = useState([]);
+const [loading, setLoading] = useState(true);
+
+useEffect(() => {
+  fetchBatches();
+}, []);
+
+const fetchBatches = async () => {
+  try {
+    const data = await getBatches();
+    setBatches(data);
+  } catch (error) {
+    console.error(error);
+    showToast("Failed to load batches");
+  } finally {
+    setLoading(false);
+  }
+};
+
+if (loading) {
+  return <Loader />;
+}
 
   return (
     <div className="min-h-screen bg-white text-black dark:bg-gray-900 dark:text-white">
@@ -28,7 +51,6 @@ function Home() {
       placeholder="Enter buyer name"
     />
 
-    <Loader />
 
     <Modal
       isOpen={open}
@@ -38,15 +60,14 @@ function Home() {
       <p>Rosemary Oil Batch</p>
     </Modal>
 
-    <Card
-      title="Batch Management"
-      description="Create and track production batches."
-    />
+    {batches.map((batch) => (
+  <Card
+    key={batch.id}
+    title={batch.name}
+    description={`Quantity: ${batch.quantity} | Status: ${batch.status}`}
+  />
+))}
 
-    <Card
-      title="Certificate Tracking"
-      description="Manage quality certificates."
-    />
   </div>
 </div>
   );
