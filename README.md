@@ -21,6 +21,30 @@ AromaTrace is a Full Stack Web Application developed to manage essential oil pro
 
 ## 🛠 Tech Stack
 
+## 📂 Project Structure
+
+```text
+AromaTrace/
+│
+├── backend/
+│   ├── prisma/
+│   ├── server.js
+│   ├── package.json
+│   └── ...
+│
+├── frontend/
+│   ├── src/
+│   ├── public/
+│   ├── package.json
+│   └── ...
+│
+├── images/
+│   └── schema-diagram.png
+│
+├── README.md
+└── .gitignore
+```
+
 ### Frontend
 
 * React.js
@@ -54,15 +78,7 @@ PostgreSQL was chosen because the project contains structured data with predefin
 
 ## 📊 Database Schema
 
-| Field     | Type                  |
-| --------- | --------------------- |
-| id        | Integer (Primary Key) |
-| name      | String                |
-| quantity  | Integer               |
-| status    | String                |
-| createdAt | DateTime              |
-
-*(Insert your exported schema diagram image here.)*
+![Database Schema](images/schema-diagram.png)
 
 ---
 
@@ -84,28 +100,31 @@ PostgreSQL was chosen because the project contains structured data with predefin
 ### Clone the repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/ojasjais/AromaTrace.git
 ```
 
-### Install frontend dependencies
+### Install Frontend
 
 ```bash
+cd frontend
 npm install
+npm run dev
 ```
 
-### Install backend dependencies
+### Install Backend
 
 ```bash
 cd backend
 npm install
+npx prisma migrate dev
+npm run dev
 ```
 
 ### Configure Environment Variables
 
-Create a `.env` file inside the `backend` folder.
-
 ```env
 DATABASE_URL=your_database_url
+DIRECT_URL=your_direct_database_url
 PORT=5000
 ```
 
@@ -125,11 +144,25 @@ npm run dev
 
 ## 📷 Project Screenshots
 
-* Home Page
-* Batch List
-* Create Batch
-* Update Batch
-* Delete Batch
+### Home Page
+
+![Home](images/home.png)
+
+### Batch List
+
+![Batch List](images/batch-list.png)
+
+### Create Batch
+
+![Create Batch](images/create.png)
+
+### Update Batch
+
+![Update Batch](images/update.png)
+
+### Delete Batch
+
+![Delete Batch](images/delete.png)
 
 ---
 
@@ -148,3 +181,11 @@ npm run dev
 ## 👨‍💻 Author
 
 **Ojasvi Jaiswal**
+
+GitHub: https://github.com/ojasjais
+
+---
+
+## 📜 License
+
+This project was developed as part of the **AI-Assisted Full Stack Web Development Internship**.
