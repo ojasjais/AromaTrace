@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { getBatches } from "../api/batches";
 import showToast from "../components/ui/Toast";
@@ -20,6 +20,99 @@ import {
   Globe,
   TrendingUp
 } from "lucide-react";
+
+/* ─── Animated counter hook ─── */
+function useAnimatedCounter(target, isFloat, duration = 1600) {
+  const [value, setValue] = useState(0);
+  const ref = useRef(null);
+  const started = useRef(false);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !started.current) {
+          started.current = true;
+          const startTime = performance.now();
+          const tick = (now) => {
+            const elapsed = now - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            // Ease out cubic
+            const eased = 1 - Math.pow(1 - progress, 3);
+            setValue(isFloat ? parseFloat((eased * target).toFixed(1)) : Math.round(eased * target));
+            if (progress < 1) requestAnimationFrame(tick);
+          };
+          requestAnimationFrame(tick);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [target, isFloat, duration]);
+
+  return { ref, value };
+}
+
+/* ─── KPI Card ─── */
+function KpiCard({ Icon, gradient, iconColor, iconBg, borderHover, glowHover, target, suffix, isFloat, label, sublabel, bars, barColor }) {
+  const { ref, value } = useAnimatedCounter(target, isFloat);
+  const maxBar = Math.max(...bars);
+
+  return (
+    <motion.div
+      variants={{ hidden: { opacity: 0, y: 30 }, visible: { opacity: 1, y: 0, transition: { type: "spring", duration: 0.8 } } }}
+      whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+      ref={ref}
+      className={[
+        "group relative flex flex-col p-6 rounded-2xl border border-white/8 transition-all duration-300 cursor-default",
+        `bg-gradient-to-br ${gradient}`,
+        "backdrop-blur-sm",
+        "shadow-lg hover:shadow-2xl",
+        borderHover,
+        glowHover,
+      ].join(" ")}
+    >
+      {/* Corner glow on hover */}
+      <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"
+        style={{ boxShadow: "inset 0 0 40px rgba(16,185,129,0.08)" }} />
+
+      {/* Icon + value row */}
+      <div className="flex items-start justify-between mb-4">
+        <div className={`flex h-11 w-11 items-center justify-center rounded-xl ${iconBg} transition-transform duration-300 group-hover:scale-110`}>
+          <Icon className={`h-5 w-5 ${iconColor}`} aria-hidden="true" />
+        </div>
+        {/* Trend chip */}
+        <span className="inline-flex items-center gap-1 text-[10px] font-bold text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 rounded-full px-2.5 py-0.5">
+          ↑ Live
+        </span>
+      </div>
+
+      {/* Animated number */}
+      <p className="text-4xl font-extrabold tracking-tight text-white leading-none mb-1">
+        {isFloat ? value.toFixed(1) : value.toLocaleString()}{suffix}
+      </p>
+      <p className="text-sm font-bold text-white/90 mb-1">{label}</p>
+      <p className="text-xs text-white/45 leading-snug mb-5">{sublabel}</p>
+
+      {/* Mini bar sparkline */}
+      <div className="mt-auto flex items-end gap-1 h-8" aria-hidden="true">
+        {bars.map((h, i) => (
+          <div
+            key={i}
+            className={`flex-1 rounded-sm ${barColor} opacity-60 group-hover:opacity-90 transition-all duration-500`}
+            style={{
+              height: `${(h / maxBar) * 100}%`,
+              transitionDelay: `${i * 40}ms`,
+            }}
+          />
+        ))}
+      </div>
+    </motion.div>
+  );
+}
 
 function Home() {
   const [open, setOpen] = useState(false);
@@ -65,57 +158,155 @@ function Home() {
       {/* 1. Hero Section */}
       <Hero />
 
-      {/* 2. Platform Value Propositions Grid */}
-      <section className="py-16 md:py-24 border-t border-b border-slate-200/60 dark:border-slate-800/80 bg-white dark:bg-slate-900/40">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-3xl mx-auto mb-16">
-            <h2 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-white sm:text-4xl">
-              Enterprise Grade Supply Chain Integrity
-            </h2>
-            <p className="mt-4 text-base text-slate-500 dark:text-slate-400 leading-relaxed">
-              Verify purity, track organic certificates, and automate transport compliance from harvest to buyer dispatch with high-fidelity telemetry.
-            </p>
+      {/* 2. Platform Value Propositions Grid — 6 premium cards */}
+      <section className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-b from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900/60 dark:to-slate-950 border-t border-b border-slate-200/60 dark:border-slate-800/60">
+
+        {/* Decorative background blobs */}
+        <div className="absolute top-0 left-1/4 -z-0 h-80 w-80 rounded-full bg-emerald-400/10 dark:bg-emerald-500/6 blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-1/4 -z-0 h-72 w-72 rounded-full bg-teal-400/10 dark:bg-teal-500/5 blur-3xl pointer-events-none" />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* Section header */}
+          <div className="text-center max-w-2xl mx-auto mb-16">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.45 }}
+              className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide text-emerald-700 dark:text-emerald-400 bg-emerald-500/10 dark:bg-emerald-500/10 border border-emerald-500/20 dark:border-emerald-500/20 mb-5 shadow-sm"
+            >
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              Platform Capabilities
+            </motion.div>
+
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.08 }}
+              className="text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900 dark:text-white"
+            >
+              Enterprise-Grade{" "}
+              <span className="bg-gradient-to-r from-emerald-600 to-teal-500 dark:from-emerald-400 dark:to-teal-300 bg-clip-text text-transparent">
+                Supply Chain Integrity
+              </span>
+            </motion.h2>
+
+            <motion.p
+              initial={{ opacity: 0, y: 14 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: 0.15 }}
+              className="mt-4 text-base text-slate-500 dark:text-slate-400 leading-relaxed"
+            >
+              From harvest to buyer dispatch — verify purity, trace certificates, and automate compliance with high-fidelity telemetry at every step.
+            </motion.p>
           </div>
 
+          {/* 6-card grid */}
           <motion.div
             variants={staggerVariants}
             initial="hidden"
             whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            viewport={{ once: true, margin: "-80px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
           >
-            {/* Feature 1 */}
-            <motion.div variants={fadeInVariants} className="flex flex-col p-6 rounded-2xl border border-slate-200/60 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 mb-5">
-                <Database className="h-5.5 w-5.5" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Immutable Batch Ledger</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed flex-grow">
-                Log batches with verified weight, source coordinates, and botanical specifications. Each record is sealed to prevent tamper modification.
-              </p>
-            </motion.div>
+            {[
+              {
+                icon: Database,
+                color: "emerald",
+                title: "Immutable Batch Ledger",
+                desc: "Log batches with verified weight, source coordinates, and botanical specs. Every record is cryptographically sealed against tampering.",
+              },
+              {
+                icon: FlaskConical,
+                color: "teal",
+                title: "GC-MS Laboratory Audits",
+                desc: "Upload gas chromatography-mass spectrometry certificates and link tests directly to distillation records for maximum transparency.",
+              },
+              {
+                icon: Layers,
+                color: "emerald",
+                title: "Multi-Tier Dispatches",
+                desc: "Map complex batch splits, blends, and shipping lanes. Give buyers instant visibility into the exact origin of their active compounds.",
+              },
+              {
+                icon: Globe,
+                color: "teal",
+                title: "Global Traceability",
+                desc: "Track batches across 38+ countries with GPS-stamped origin coordinates. Full chain-of-custody from field to final destination.",
+              },
+              {
+                icon: FileCheck,
+                color: "emerald",
+                title: "Compliance Reporting",
+                desc: "Auto-generate ISO, IFRA, and organic certification reports. One-click export to PDF ready for buyer and regulatory review.",
+              },
+              {
+                icon: TrendingUp,
+                color: "teal",
+                title: "Live Analytics Dashboard",
+                desc: "Real-time yield trends, quality score charts, and dispatch velocity — all in a unified dashboard with role-based access control.",
+              },
+            ].map(({ icon: Icon, color, title, desc }, idx) => (
+              <motion.div
+                key={title}
+                variants={fadeInVariants}
+                whileHover={{ y: -6, transition: { type: "spring", stiffness: 300, damping: 20 } }}
+                className={[
+                  "group relative flex flex-col p-6 rounded-2xl border transition-all duration-300",
+                  "bg-white dark:bg-slate-900/70",
+                  "shadow-sm hover:shadow-xl hover:shadow-emerald-500/10 dark:hover:shadow-emerald-500/10",
+                  color === "emerald"
+                    ? "border-slate-200/70 dark:border-slate-800/80 hover:border-emerald-300/60 dark:hover:border-emerald-700/50"
+                    : "border-slate-200/70 dark:border-slate-800/80 hover:border-teal-300/60 dark:hover:border-teal-700/50",
+                ].join(" ")}
+              >
+                {/* Top accent line on hover */}
+                <div className={[
+                  "absolute inset-x-0 top-0 h-0.5 rounded-t-2xl transition-all duration-300 opacity-0 group-hover:opacity-100",
+                  color === "emerald"
+                    ? "bg-gradient-to-r from-emerald-500 to-teal-400"
+                    : "bg-gradient-to-r from-teal-500 to-emerald-400",
+                ].join(" ")} />
 
-            {/* Feature 2 */}
-            <motion.div variants={fadeInVariants} className="flex flex-col p-6 rounded-2xl border border-slate-200/60 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 mb-5">
-                <FlaskConical className="h-5.5 w-5.5" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">GC-MS Laboratory Audits</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed flex-grow">
-                Upload gas chromatography-mass spectrometry certificates directly. Link tests directly to distillation records for maximum transparency.
-              </p>
-            </motion.div>
+                {/* Icon badge */}
+                <div className={[
+                  "flex h-12 w-12 items-center justify-center rounded-xl mb-5 transition-all duration-300",
+                  "group-hover:scale-110 group-hover:shadow-lg",
+                  color === "emerald"
+                    ? "bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/15 dark:text-emerald-400 group-hover:bg-emerald-500/15 group-hover:shadow-emerald-500/20"
+                    : "bg-teal-500/10 text-teal-600 dark:bg-teal-500/15 dark:text-teal-400 group-hover:bg-teal-500/15 group-hover:shadow-teal-500/20",
+                ].join(" ")}>
+                  <Icon className="h-6 w-6" aria-hidden="true" />
+                </div>
 
-            {/* Feature 3 */}
-            <motion.div variants={fadeInVariants} className="flex flex-col p-6 rounded-2xl border border-slate-200/60 bg-white dark:border-slate-800/80 dark:bg-slate-900/60 shadow-sm">
-              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-600 dark:bg-emerald-500/20 dark:text-emerald-400 mb-5">
-                <Layers className="h-5.5 w-5.5" />
-              </div>
-              <h3 className="text-lg font-semibold mb-2">Multi-Tier Dispatches</h3>
-              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed flex-grow">
-                Map complex batch splits, blends, and shipping lanes. Give global buyers instant visibility on the exact origin of their active compounds.
-              </p>
-            </motion.div>
+                {/* Card number */}
+                <span className="absolute top-5 right-5 text-xs font-bold text-slate-300 dark:text-slate-700 group-hover:text-emerald-400/60 dark:group-hover:text-emerald-600/60 transition-colors duration-300 select-none">
+                  {String(idx + 1).padStart(2, "0")}
+                </span>
+
+                <h3 className="text-base font-bold text-slate-900 dark:text-white mb-2 tracking-tight">
+                  {title}
+                </h3>
+                <p className="text-sm text-slate-500 dark:text-slate-400 leading-relaxed flex-grow">
+                  {desc}
+                </p>
+
+                {/* Learn more link */}
+                <div className={[
+                  "mt-5 flex items-center gap-1 text-xs font-semibold transition-all duration-200",
+                  "opacity-0 group-hover:opacity-100 translate-y-1 group-hover:translate-y-0",
+                  color === "emerald"
+                    ? "text-emerald-600 dark:text-emerald-400"
+                    : "text-teal-600 dark:text-teal-400",
+                ].join(" ")}>
+                  <ChevronRight className="h-3.5 w-3.5" aria-hidden="true" />
+                  Learn more
+                </div>
+              </motion.div>
+            ))}
           </motion.div>
         </div>
       </section>
@@ -245,43 +436,135 @@ function Home() {
         </div>
       </Modal>
 
-      {/* 4. Numerical Metrics Callout Banner */}
-      <section className="py-16 md:py-20 bg-slate-900 text-white dark:bg-slate-950 dark:border-t dark:border-b dark:border-slate-900 transition-colors duration-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="text-3xl md:text-4xl font-extrabold text-emerald-400">
-                12,500L+
-              </div>
-              <div className="text-xs text-slate-400 mt-2 font-semibold uppercase tracking-wider">
-                Total Liters Traced
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-extrabold text-emerald-400">
-                99.9%
-              </div>
-              <div className="text-xs text-slate-400 mt-2 font-semibold uppercase tracking-wider">
-                Audited Compliance
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-extrabold text-emerald-400">
-                240+
-              </div>
-              <div className="text-xs text-slate-400 mt-2 font-semibold uppercase tracking-wider">
-                Independent Growers
-              </div>
-            </div>
-            <div>
-              <div className="text-3xl md:text-4xl font-extrabold text-emerald-400">
-                15s
-              </div>
-              <div className="text-xs text-slate-400 mt-2 font-semibold uppercase tracking-wider">
-                Dispatch Verification
-              </div>
-            </div>
-          </div>
+      {/* 4. Statistics KPI Section */}
+      <section className="relative py-20 md:py-28 overflow-hidden bg-gradient-to-br from-slate-900 via-emerald-950 to-slate-900 dark:from-slate-950 dark:via-emerald-950/80 dark:to-slate-950">
+
+        {/* Background decorative blobs */}
+        <div className="absolute -top-32 -left-32 h-96 w-96 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none" />
+        <div className="absolute -bottom-24 -right-24 h-80 w-80 rounded-full bg-teal-500/15 blur-3xl pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-emerald-600/8 blur-3xl pointer-events-none" />
+
+        {/* Subtle grid texture */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage:
+              "linear-gradient(rgba(52,211,153,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(52,211,153,0.05) 1px, transparent 1px)",
+            backgroundSize: "48px 48px",
+          }}
+        />
+
+        <div className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+
+          {/* Section heading */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="text-center mb-14"
+          >
+            <span className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-bold tracking-wide text-emerald-300 bg-emerald-500/10 border border-emerald-500/20 mb-4">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              By the Numbers
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-extrabold tracking-tight text-white">
+              Powering{" "}
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-300 bg-clip-text text-transparent">
+                Global Oil Traceability
+              </span>
+            </h2>
+          </motion.div>
+
+          {/* KPI cards grid */}
+          <motion.div
+            variants={staggerVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true, margin: "-60px" }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"
+          >
+            {[
+              {
+                icon: Database,
+                gradient: "from-emerald-500/20 to-teal-500/10",
+                iconColor: "text-emerald-400",
+                iconBg: "bg-emerald-500/15",
+                borderHover: "hover:border-emerald-500/40",
+                glowHover: "hover:shadow-emerald-500/20",
+                target: 1280,
+                suffix: "+",
+                isFloat: false,
+                label: "Verified Batches",
+                sublabel: "Cryptographically sealed batch records",
+                bars: [40, 55, 48, 70, 62, 80, 75],
+                barColor: "bg-emerald-400",
+              },
+              {
+                icon: Users,
+                gradient: "from-teal-500/20 to-emerald-500/10",
+                iconColor: "text-teal-300",
+                iconBg: "bg-teal-500/15",
+                borderHover: "hover:border-teal-500/40",
+                glowHover: "hover:shadow-teal-500/20",
+                target: 240,
+                suffix: "+",
+                isFloat: false,
+                label: "Active Producers",
+                sublabel: "Independent growers on platform",
+                bars: [30, 42, 38, 55, 50, 65, 60],
+                barColor: "bg-teal-400",
+              },
+              {
+                icon: Globe,
+                gradient: "from-emerald-600/15 to-teal-600/10",
+                iconColor: "text-emerald-300",
+                iconBg: "bg-emerald-600/15",
+                borderHover: "hover:border-emerald-400/40",
+                glowHover: "hover:shadow-emerald-400/20",
+                target: 38,
+                suffix: "",
+                isFloat: false,
+                label: "Countries Served",
+                sublabel: "Global supply chain coverage",
+                bars: [20, 22, 25, 28, 30, 35, 38],
+                barColor: "bg-emerald-300",
+              },
+              {
+                icon: TrendingUp,
+                gradient: "from-teal-400/20 to-emerald-400/10",
+                iconColor: "text-teal-300",
+                iconBg: "bg-teal-400/15",
+                borderHover: "hover:border-teal-400/40",
+                glowHover: "hover:shadow-teal-400/20",
+                target: 99.4,
+                suffix: "%",
+                isFloat: true,
+                label: "Quality Score",
+                sublabel: "Average GC-MS purity rating",
+                bars: [85, 88, 90, 92, 95, 97, 99],
+                barColor: "bg-teal-300",
+              },
+            ].map(({ icon: Icon, gradient, iconColor, iconBg, borderHover, glowHover, target, suffix, isFloat, label, sublabel, bars, barColor }) => (
+              <KpiCard
+                key={label}
+                Icon={Icon}
+                gradient={gradient}
+                iconColor={iconColor}
+                iconBg={iconBg}
+                borderHover={borderHover}
+                glowHover={glowHover}
+                target={target}
+                suffix={suffix}
+                isFloat={isFloat}
+                label={label}
+                sublabel={sublabel}
+                bars={bars}
+                barColor={barColor}
+              />
+            ))}
+          </motion.div>
         </div>
       </section>
 
