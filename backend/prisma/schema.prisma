@@ -13,10 +13,82 @@ datasource db {
   directUrl = env("DIRECT_URL")
 }
 
-model Batch {
+model User {
   id        Int      @id @default(autoincrement())
   name      String
-  quantity  Int
-  status    String
+  email     String   @unique
+  password  String
+  role      String
   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  activities    Activity[]
+  notifications Notification[]
+}
+
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  category    String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  batches   Batch[]
+  inventory Inventory?
+}
+
+model Batch {
+  id             Int      @id @default(autoincrement())
+  batchCode      String
+  status         String
+  productionDate DateTime
+  expiryDate     DateTime
+  createdAt      DateTime @default(now())
+
+  productId Int
+  product   Product @relation(fields: [productId], references: [id])
+
+  logs BatchLog[]
+}
+
+model BatchLog {
+  id        Int      @id @default(autoincrement())
+  action    String
+  message   String
+  createdAt DateTime @default(now())
+
+  batchId Int
+  batch   Batch @relation(fields: [batchId], references: [id])
+}
+
+model Inventory {
+  id        Int      @id @default(autoincrement())
+  quantity  Int
+  unit      String
+  updatedAt DateTime @updatedAt
+
+  productId Int     @unique
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Activity {
+  id          Int      @id @default(autoincrement())
+  activityType String
+  description String
+  createdAt   DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
+}
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  title     String
+  message   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  userId Int
+  user   User @relation(fields: [userId], references: [id])
 }
