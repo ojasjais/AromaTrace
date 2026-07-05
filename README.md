@@ -1,109 +1,79 @@
 # 🌿 AromaTrace
 
-AromaTrace is a Full Stack Web Application developed to manage essential oil production batches efficiently. The application enables users to create, view, update, delete, and search production batches through a clean React frontend and a RESTful Express.js backend. Data is stored persistently in a PostgreSQL database hosted on Supabase and managed using Prisma ORM.
+A modern full-stack SaaS application for managing and tracking essential oil production batches.
+
+Built using React, Node.js, Express, Prisma, PostgreSQL (Supabase), and Tailwind CSS.
 
 ---
 
-## 🚀 Features
+## ✨ Features
 
-* Create new production batches
-* View all available batches
-* View a single batch by ID
-* Update batch information
-* Delete existing batches
-* Search batches by name
-* PostgreSQL database integration using Supabase
-* Prisma ORM for database operations
-* Responsive React frontend
-* RESTful API architecture
+- 🌿 Premium SaaS Landing Page
+- 📊 Analytics Dashboard
+- 📦 Batch Management
+- ➕ Create Batch
+- ✏️ Edit Batch
+- ❌ Delete Batch
+- 🔍 Search & Filter
+- 📈 Production Statistics
+- 🌙 Dark Mode
+- 📱 Fully Responsive
+- ⚡ Glassmorphism UI
+- 🎨 Framer Motion Animations
+- 🗄 PostgreSQL Database (Supabase)
+- 🔐 REST API using Express & Prisma
 
 ---
 
 ## 🛠 Tech Stack
 
+### Frontend
+
+- React
+- Vite
+- Tailwind CSS
+- Framer Motion
+- React Router
+- Lucide React
+
+### Backend
+
+- Node.js
+- Express.js
+- Prisma ORM
+- PostgreSQL
+- Supabase
+
+---
+
 ## 📂 Project Structure
 
-```text
-AromaTrace/
-│
-├── backend/
-│   ├── prisma/
-│   ├── server.js
-│   ├── package.json
-│   └── ...
+```
+aromatrace/
 │
 ├── frontend/
 │   ├── src/
 │   ├── public/
-│   ├── package.json
 │   └── ...
 │
-├── images/
-│   └── schema-diagram.png
-│
-├── README.md
-└── .gitignore
+├── backend/
+│   ├── controllers/
+│   ├── routes/
+│   ├── prisma/
+│   └── ...
+```
+
+---
+
+## 🚀 Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/ojasjais/AromaTrace
 ```
 
 ### Frontend
-
-* React.js
-* React Router
-* Axios
-* Tailwind CSS
-
-### Backend
-
-* Node.js
-* Express.js
-* Prisma ORM
-
-### Database
-
-* PostgreSQL (Supabase)
-
-### Tools
-
-* Postman
-* Git & GitHub
-* VS Code
-
----
-
-## 🗄 Database Choice
-
-PostgreSQL was chosen because the project contains structured data with predefined fields such as batch name, quantity, status, and creation date. PostgreSQL provides strong consistency, reliability, and efficient querying, making it suitable for production management applications.
-
----
-
-## 📊 Database Schema
-
-![Database Schema](images/schema-diagram.png)
-
----
-
-## 📌 REST API Endpoints
-
-| Method | Endpoint                    | Description            |
-| ------ | --------------------------- | ---------------------- |
-| GET    | `/api/batches`              | Get all batches        |
-| GET    | `/api/batches/:id`          | Get a single batch     |
-| POST   | `/api/batches`              | Create a batch         |
-| PUT    | `/api/batches/:id`          | Update a batch         |
-| DELETE | `/api/batches/:id`          | Delete a batch         |
-| GET    | `/api/batches/search/:name` | Search batches by name |
-
----
-
-## ⚙️ Installation
-
-### Clone the repository
-
-```bash
-git clone https://github.com/ojasjais/AromaTrace.git
-```
-
-### Install Frontend
 
 ```bash
 cd frontend
@@ -111,81 +81,70 @@ npm install
 npm run dev
 ```
 
-### Install Backend
+### Backend
 
 ```bash
 cd backend
 npm install
-npx prisma migrate dev
-npm run dev
+npm start
 ```
 
-### Configure Environment Variables
+---
+
+## 🔑 Environment Variables
+
+Backend `.env`
 
 ```env
-DATABASE_URL=your_database_url
-DIRECT_URL=your_direct_database_url
+DATABASE_URL=
+
+DIRECT_URL=
+
 PORT=5000
 ```
 
-### Start Backend
+Frontend `.env`
 
-```bash
-npm run dev
-```
-
-### Start Frontend
-
-```bash
-npm run dev
+```env
+VITE_API_URL=http://localhost:5000/api
 ```
 
 ---
 
-## 📷 Project Screenshots
+## 📸 Screenshots
 
-### Home Page
+### Home
 
-![Home](images/home.png)
+(Add Screenshot)
 
-### Batch List
+### Dashboard
 
-![Batch List](images/batch-list.png)
+(Add Screenshot)
 
-### Create Batch
+### Batch Management
 
-![Create Batch](images/create.png)
-
-### Update Batch
-
-![Update Batch](images/update.png)
-
-### Delete Batch
-
-![Delete Batch](images/delete.png)
+(Add Screenshot)
 
 ---
 
-## 🔮 Future Improvements
+## 🌐 Live Demo
 
-* JWT Authentication
-* User Roles (Admin/User)
-* Dashboard Analytics
-* Image Upload for Batches
-* Batch History Tracking
-* Pagination & Filtering
-* Export Reports (PDF/Excel)
+Frontend:
+
+https://aroma-trace.vercel.app
+
+Backend API:
+
+https://aromatrace.onrender.com
 
 ---
 
 ## 👨‍💻 Author
 
-**Ojasvi Jaiswal**
+Ojasvi Jaiswal
 
-GitHub: https://github.com/ojasjais
+GitHub:
+https://github.com/ojasjais
 
----
-
-## 📜 License
-
-This project was developed as part of the **AI-Assisted Full Stack Web Development Internship**.
+LinkedIn:
+www.linkedin.com/in/ojasvijaiswal
