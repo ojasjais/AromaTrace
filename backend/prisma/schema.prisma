@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  password  String
-  role      String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id            Int            @id @default(autoincrement())
+  name          String
+  email         String         @unique
+  password      String
+  role          String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
 
   activities    Activity[]
   notifications Notification[]
@@ -33,50 +33,21 @@ model Product {
   category    String?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-
-  batches   Batch[]
-  inventory Inventory?
 }
 
 model Batch {
-  id             Int      @id @default(autoincrement())
-  batchCode      String
-  status         String
-  productionDate DateTime
-  expiryDate     DateTime
-  createdAt      DateTime @default(now())
-
-  productId Int
-  product   Product @relation(fields: [productId], references: [id])
-
-  logs BatchLog[]
-}
-
-model BatchLog {
   id        Int      @id @default(autoincrement())
-  action    String
-  message   String
-  createdAt DateTime @default(now())
-
-  batchId Int
-  batch   Batch @relation(fields: [batchId], references: [id])
-}
-
-model Inventory {
-  id        Int      @id @default(autoincrement())
+  name      String
   quantity  Int
-  unit      String
-  updatedAt DateTime @updatedAt
-
-  productId Int     @unique
-  product   Product @relation(fields: [productId], references: [id])
+  status    String
+  createdAt DateTime @default(now())
 }
 
 model Activity {
-  id          Int      @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   activityType String
-  description String
-  createdAt   DateTime @default(now())
+  description  String
+  createdAt    DateTime @default(now())
 
   userId Int
   user   User @relation(fields: [userId], references: [id])
