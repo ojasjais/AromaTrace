@@ -10,6 +10,9 @@ import Dashboard from "./pages/Dashboard";
 import Batches from "./pages/Batches";
 import BatchDetails from "./pages/BatchDetails";
 import Login from "./pages/Login";
+import Register from "./pages/Register";
+import ProtectedRoute from "./components/ProtectedRoute";
+import { AuthProvider } from "./context/AuthContext";
 
 function AppContent() {
   const location = useLocation();
@@ -25,9 +28,9 @@ function AppContent() {
           <Sidebar />
           <div className="flex-1 min-w-0">
             <Routes>
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/batches" element={<Batches />} />
-              <Route path="/batches/:id" element={<BatchDetails />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/batches" element={<ProtectedRoute><Batches /></ProtectedRoute>} />
+              <Route path="/batches/:id" element={<ProtectedRoute><BatchDetails /></ProtectedRoute>} />
             </Routes>
           </div>
         </div>
@@ -38,6 +41,7 @@ function AppContent() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
             </Routes>
           </div>
           <Footer />
@@ -50,7 +54,9 @@ function AppContent() {
 function App() {
   return (
     <BrowserRouter>
-      <AppContent />
+      <AuthProvider>
+        <AppContent />
+      </AuthProvider>
     </BrowserRouter>
   );
 }

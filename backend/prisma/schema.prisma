@@ -17,13 +17,17 @@ model User {
   id            Int            @id @default(autoincrement())
   name          String
   email         String         @unique
-  password      String
-  role          String
+  password      String?
+  role          String         @default("user")
+  provider      String         @default("local")
+  providerId    String?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 
   activities    Activity[]
   notifications Notification[]
+
+  @@unique([provider, providerId])
 }
 
 model Product {

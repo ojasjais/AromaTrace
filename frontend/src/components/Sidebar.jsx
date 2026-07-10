@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import showToast from "./ui/Toast";
+import { useAuth } from "../context/AuthContext";
 import {
   LayoutDashboard,
   FlaskConical,
@@ -23,6 +24,7 @@ import {
 function Sidebar() {
   const location = useLocation();
   const navigate = useNavigate();
+  const { logout, user } = useAuth();
   const [isCollapsed, setIsCollapsed] = useState(
     localStorage.getItem("sidebar-collapsed") === "true"
   );
@@ -46,6 +48,7 @@ function Sidebar() {
   }, [darkMode]);
 
   const handleLogout = () => {
+    logout();
     showToast("Distillery session closed.");
     navigate("/login");
   };
@@ -152,13 +155,19 @@ function Sidebar() {
         {/* User profile & Logout */}
         <div className={`flex items-center gap-3 p-1 rounded-2xl bg-emerald-500/5 dark:bg-emerald-950/20 border border-emerald-100/50 dark:border-emerald-900/30 ${isCollapsed ? "justify-center px-1 py-2" : "p-2"}`}>
           <div className="h-8 w-8 rounded-full bg-emerald-600 text-white dark:bg-emerald-555 flex items-center justify-center font-bold text-xs shrink-0 border border-emerald-500/10 shadow-sm">
-            AD
+            {user?.name 
+              ? user.name.split(" ").map(n => n[0]).join("").toUpperCase().substring(0, 2) 
+              : (user?.email ? user.email.substring(0, 2).toUpperCase() : "AD")}
           </div>
           
           {!isCollapsed && (
             <div className="flex-1 min-w-0">
-              <div className="text-xs font-bold text-emerald-900 dark:text-slate-200 truncate">Aroma Distiller</div>
-              <div className="text-[9px] text-emerald-800/60 dark:text-emerald-500 truncate font-semibold uppercase tracking-wider">Master Operator</div>
+              <div className="text-xs font-bold text-emerald-900 dark:text-slate-200 truncate">
+                {user?.name || "Aroma Operator"}
+              </div>
+              <div className="text-[9px] text-emerald-800/60 dark:text-emerald-500 truncate font-semibold uppercase tracking-wider">
+                {user?.role || "Master Operator"}
+              </div>
             </div>
           )}
 

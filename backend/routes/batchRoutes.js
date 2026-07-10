@@ -9,17 +9,16 @@ const {
   deleteBatch,
   searchBatch,
 } = require("../controllers/batchController");
+const requireAuth = require("../middleware/requireAuth");
 
+// Public read endpoints (keeps Home page demo working without login)
 router.get("/", getBatches);
-
 router.get("/search/:name", searchBatch);
-
 router.get("/:id", getBatch);
 
-router.post("/", createBatch);
-
-router.put("/:id", updateBatch);
-
-router.delete("/:id", deleteBatch);
+// Protected write endpoints (require JWT)
+router.post("/", requireAuth, createBatch);
+router.put("/:id", requireAuth, updateBatch);
+router.delete("/:id", requireAuth, deleteBatch);
 
 module.exports = router;
