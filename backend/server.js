@@ -44,6 +44,7 @@ if (!process.env.JWT_SECRET) {
 const productRoutes = require("./routes/productRoutes");
 const batchRoutes = require("./routes/batchRoutes");
 const authRoutes = require("./routes/authRoutes");
+const aiRoutes = require("./routes/aiRoutes");
 const { passport } = require("./config/passport");
 
 app.use(passport.initialize());
@@ -55,6 +56,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/batches", batchRoutes);
+app.use("/api/ai", aiRoutes);
 
 const PORT = process.env.PORT || 5000;
 
