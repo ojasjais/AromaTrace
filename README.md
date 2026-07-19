@@ -28,6 +28,12 @@ AromaTrace is a modern full-stack application designed to simplify essential oil
 - 🔒 Password Hashing (bcrypt)
 - 🌐 Google OAuth (Mock)
 - 🔐 REST API using Express & Prisma
+- 🤖 AI Batch Insights (Google Gemini)
+- 🌿 Botanical Profile Analysis
+- 🧪 Formulation & Commercial Yield Recommendations
+- 📦 Storage Optimization & Market Readiness
+- ❓ Custom AI Batch Questions
+- ⏳ AI Loading States & Error Handling
 
 
 ## 🔐 Authentication
@@ -43,6 +49,31 @@ AromaTrace includes a secure authentication system with:
 - Authenticated User Profile Endpoint
 
 ---
+
+## 🤖 AI Integration
+
+AromaTrace integrates Google Gemini AI to generate intelligent insights for essential oil batches.
+
+Available analysis modes:
+
+- Botanical Profile
+- Formulation & Commercial Yield
+- Storage Optimization & Market Readiness
+- Custom Batch Questions
+
+The backend securely communicates with Gemini using environment variables, ensuring API keys are never exposed to the frontend.
+
+## 📝 Prompt Engineering
+
+Three prompt variations were designed, tested, and evaluated for the AI insights engine.
+
+The repository includes:
+
+- Prompt Variation 1 – Botanical Profile
+- Prompt Variation 2 – Formulation & Commercial Yield
+- Prompt Variation 3 – Storage Optimization
+
+Complete prompt templates, example inputs, example outputs, evaluation, and analysis are documented in **PROMPTS.md**.
 
 ## 🛠 Tech Stack
 
@@ -118,6 +149,7 @@ aromatrace/
 | PUT | /api/batches/:id | Update batch |
 | DELETE | /api/batches/:id | Delete batch |
 | GET | /api/batches/search/:name | Search batches |
+| POST|/api/ai/insights |Generate AI-powered batch insights
 
 ---
 
@@ -164,6 +196,7 @@ FRONTEND_URL=http://localhost:5173
 GOOGLE_CLIENT_ID=your_google_client_id
 GOOGLE_CLIENT_SECRET=your_google_client_secret
 GOOGLE_CALLBACK_URL=http://localhost:5000/api/auth/google/callback
+GEMINI_API_KEY=your_gemini_api_key_here
 
 ```
 
@@ -171,7 +204,18 @@ Frontend `.env`
 
 ```env
 VITE_API_URL=http://localhost:5000/api
+
 ```
+
+## 🔒 Security
+
+- JWT Authentication
+- Password hashing using bcrypt
+- Protected API routes
+- Request validation using Zod
+- Rate limiting for AI endpoints
+- Secure environment variables
+- Graceful error handling and request timeout management
 
 ---
 
@@ -198,6 +242,24 @@ VITE_API_URL=http://localhost:5000/api
 ### User Login
 
 ![Login](images/login.png)
+
+## 🤖 AI Insights
+
+### Botanical Analysis
+
+![Botanical](images/ai-botanical.png)
+
+### Formulation Guide
+
+![Formulation](images/ai-formulation.png)
+
+### Storage Optimization
+
+![Optimization](images/ai-optimization.png)
+
+### Custom Query
+
+![Custom Query](images/ai-custom-query.png)
 
 ---
 
