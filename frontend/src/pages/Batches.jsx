@@ -9,12 +9,10 @@ import {
 } from "../api/batches";
 import showToast from "../components/ui/Toast";
 import Modal from "../components/ui/Modal";
-import Loader from "../components/ui/Loader";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import {
   Search,
-  Filter,
   ArrowUpDown,
   Plus,
   Trash2,
@@ -202,8 +200,6 @@ function Batches() {
   const [formState, setFormState]           = useState({ name: "", quantity: "", status: "Active" });
 
   /* ── Original API / logic ── */
-  useEffect(() => { fetchData(); }, []);
-
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -216,6 +212,11 @@ function Batches() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

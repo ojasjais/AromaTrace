@@ -45,6 +45,9 @@ const productRoutes = require("./routes/productRoutes");
 const batchRoutes = require("./routes/batchRoutes");
 const authRoutes = require("./routes/authRoutes");
 const aiRoutes = require("./routes/aiRoutes");
+const buyerRoutes = require("./routes/buyerRoutes");
+const certificateRoutes = require("./routes/certificateRoutes");
+const reportRoutes = require("./routes/reportRoutes");
 const { passport } = require("./config/passport");
 
 app.use(passport.initialize());
@@ -57,6 +60,9 @@ app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/batches", batchRoutes);
 app.use("/api/ai", aiRoutes);
+app.use("/api/buyers", buyerRoutes);
+app.use("/api/certificates", certificateRoutes);
+app.use("/api/reports", reportRoutes);
 
 const PORT = process.env.PORT || 5000;
 

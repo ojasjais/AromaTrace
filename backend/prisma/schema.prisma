@@ -67,3 +67,31 @@ model Notification {
   userId Int
   user   User @relation(fields: [userId], references: [id])
 }
+
+model Buyer {
+  id           Int           @id @default(autoincrement())
+  name         String
+  company      String
+  email        String
+  phone        String?
+  address      String?
+  status       String        @default("Active")
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+
+  certificates Certificate[]
+}
+
+model Certificate {
+  id                Int       @id @default(autoincrement())
+  certificateNumber String    @unique
+  buyerId           Int?
+  buyer             Buyer?    @relation(fields: [buyerId], references: [id], onDelete: SetNull)
+  buyerName         String
+  batchId           Int?
+  batchName         String?
+  status            String    @default("Valid")
+  issueDate         DateTime  @default(now())
+  expiryDate        DateTime?
+  createdAt         DateTime  @default(now())
+}

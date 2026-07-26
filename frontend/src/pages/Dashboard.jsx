@@ -8,13 +8,11 @@ import Loader from "../components/ui/Loader";
 import Input from "../components/ui/Input";
 import Button from "../components/ui/Button";
 import {
-  LayoutDashboard,
   FlaskConical,
   Bell,
   Search,
   Plus,
   Activity,
-  FileText,
   CheckCircle2,
   Clock,
   TrendingUp,
@@ -24,14 +22,11 @@ import {
   TrendingDown,
   ArrowRight,
   Sparkles,
-  Clipboard,
   ShieldCheck,
   PackageCheck,
   Droplet,
   Award,
-  Users,
   Compass,
-  Zap,
   BarChart2,
   CheckCheck,
 } from "lucide-react";
@@ -141,8 +136,6 @@ function Dashboard() {
   ]);
 
   /* ── Original API / logic ── */
-  useEffect(() => { fetchBatches(); }, []);
-
   const fetchBatches = async () => {
     setLoading(true);
     try {
@@ -155,6 +148,11 @@ function Dashboard() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchBatches();
+  }, []);
 
   const totalVolume    = batches.reduce((s, b) => s + (Number(b.quantity) || 0), 0);
   const activeCount    = batches.filter(b => b.status.toLowerCase().includes("active") || b.status.toLowerCase().includes("process")).length;

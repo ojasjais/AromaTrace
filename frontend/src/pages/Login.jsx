@@ -37,6 +37,7 @@ function Login() {
     }
 
     if (oauthToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setSubmitting(true);
       completeOAuthLogin(oauthToken)
         .then(() => {

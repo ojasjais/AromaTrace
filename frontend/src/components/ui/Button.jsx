@@ -17,9 +17,9 @@ function Button({
   onClick,
   ...props
 }) {
-  let baseStyle = "inline-flex items-center justify-center font-medium rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/40 active:scale-95 shadow-sm";
+  const baseStyle = "inline-flex items-center justify-center font-medium rounded-xl transition-all focus:outline-none focus:ring-2 focus:ring-emerald-500/40 active:scale-95 shadow-sm";
 
-  let variantStyle = "";
+  let variantStyle;
   if (variant === "primary") {
     variantStyle = "bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 text-white shadow-emerald-600/20 hover:shadow-lg border border-emerald-500/10";
   } else if (variant === "secondary") {
@@ -29,7 +29,7 @@ function Button({
     variantStyle = "border border-emerald-500/30 hover:border-emerald-500 text-emerald-600 dark:text-emerald-400 bg-emerald-500/5 hover:bg-emerald-500/10 hover:shadow-sm";
   }
 
-  let sizeStyle = "";
+  let sizeStyle;
   if (size === "sm") {
     sizeStyle = "px-3 py-1.5 text-xs gap-1.5";
   } else if (size === "lg") {

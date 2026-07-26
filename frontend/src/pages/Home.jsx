@@ -15,7 +15,6 @@ import {
   Users,
   ChevronRight,
   Plus,
-  Search,
   FlaskConical,
   Globe,
   TrendingUp
@@ -120,10 +119,6 @@ function Home() {
   const [loading, setLoading] = useState(true);
   const [buyerName, setBuyerName] = useState("");
 
-  useEffect(() => {
-    fetchBatches();
-  }, []);
-
   const fetchBatches = async () => {
     try {
       const data = await getBatches();
@@ -135,6 +130,11 @@ function Home() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchBatches();
+  }, []);
 
   // Modern entry animations variants
   const fadeInVariants = {

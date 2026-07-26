@@ -60,9 +60,9 @@ function Sidebar() {
   const navLinks = [
     { name: "Dashboard", path: "/dashboard", icon: LayoutDashboard, action: null },
     { name: "Batch Management", path: "/batches", icon: FlaskConical, action: null },
-    { name: "Certificates", path: "#certificates", icon: Award, action: () => showUnderCultivation("GC-MS Certificate") },
-    { name: "Buyers", path: "#buyers", icon: Users, action: () => showUnderCultivation("Buyer accounts") },
-    { name: "Reports", path: "#reports", icon: FileCheck, action: () => showUnderCultivation("Distillation reports") },
+    { name: "Certificates", path: "/certificates", icon: Award, action: null },
+    { name: "Buyers", path: "/buyers", icon: Users, action: null },
+    { name: "Reports", path: "/reports", icon: FileCheck, action: null },
     { name: "Settings", path: "#settings", icon: Sliders, action: () => showUnderCultivation("Distillery system settings") }
   ];
 

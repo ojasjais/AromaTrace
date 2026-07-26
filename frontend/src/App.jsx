@@ -9,6 +9,9 @@ import Home from "./pages/Home";
 import Dashboard from "./pages/Dashboard";
 import Batches from "./pages/Batches";
 import BatchDetails from "./pages/BatchDetails";
+import Buyers from "./pages/Buyers";
+import Reports from "./pages/Reports";
+import Certificates from "./pages/Certificates";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -16,9 +19,12 @@ import { AuthProvider } from "./context/AuthContext";
 
 function AppContent() {
   const location = useLocation();
-  const isAuthPage = 
-    location.pathname.startsWith("/dashboard") || 
-    location.pathname.startsWith("/batches");
+  const isAuthPage =
+    location.pathname.startsWith("/dashboard") ||
+    location.pathname.startsWith("/batches") ||
+    location.pathname.startsWith("/buyers") ||
+    location.pathname.startsWith("/reports") ||
+    location.pathname.startsWith("/certificates");
 
   return (
     <>
@@ -31,6 +37,9 @@ function AppContent() {
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/batches" element={<ProtectedRoute><Batches /></ProtectedRoute>} />
               <Route path="/batches/:id" element={<ProtectedRoute><BatchDetails /></ProtectedRoute>} />
+              <Route path="/buyers" element={<ProtectedRoute><Buyers /></ProtectedRoute>} />
+              <Route path="/reports" element={<ProtectedRoute><Reports /></ProtectedRoute>} />
+              <Route path="/certificates" element={<ProtectedRoute><Certificates /></ProtectedRoute>} />
             </Routes>
           </div>
         </div>

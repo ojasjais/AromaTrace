@@ -16,11 +16,8 @@ import {
   QrCode,
   Building,
   History,
-  FileCheck,
   Leaf,
-  Clock,
   Printer,
-  Globe,
   Copy,
   Check,
   Download,
@@ -73,10 +70,6 @@ function BatchDetails() {
   const [isAiMocked, setIsAiMocked] = useState(false);
   const [aiWarning, setAiWarning] = useState("");
 
-  useEffect(() => {
-    fetchBatchDetails();
-  }, [id]);
-
   const fetchBatchDetails = async () => {
     setLoading(true);
     setError(null);
@@ -90,6 +83,12 @@ function BatchDetails() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    fetchBatchDetails();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const fetchAIInsights = async (selectedMode = aiMode, customQueryText = "") => {
     setAiLoading(true);

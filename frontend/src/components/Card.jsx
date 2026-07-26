@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Beaker, Award, ChevronRight } from "lucide-react";
+import { Beaker, ChevronRight } from "lucide-react";
 
 function Card({ title, description, ...props }) {
   // Try to parse quantity and status if they are in the format "Quantity: X | Status: Y"
