@@ -7,6 +7,31 @@ const { validateRegister, validateLogin } = require("../middleware/validateAuth"
 const { authLimiter } = require("../middleware/rateLimiter");
 const { passport, googleOAuthEnabled, issueTokenForUser } = require("../config/passport");
 
+const getFrontendUrl = (req) => {
+  const referer = req?.headers?.referer || req?.headers?.origin;
+  if (referer) {
+    try {
+      const urlObj = new URL(referer);
+      if (urlObj.hostname !== "localhost" && urlObj.hostname !== "127.0.0.1") {
+        return urlObj.origin;
+      }
+    } catch {
+      // invalid URL header
+    }
+  }
+
+  const envUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "";
+  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+    return envUrl;
+  }
+
+  if (envUrl) {
+    return envUrl;
+  }
+
+  return "http://localhost:5173";
+};
+
 router.post("/register", authLimiter, validateRegister, register);
 router.post("/login", authLimiter, validateLogin, login);
 router.get("/me", requireAuth, getMe);
@@ -17,18 +42,17 @@ if (googleOAuthEnabled()) {
     passport.authenticate("google", { scope: ["profile", "email"], session: false })
   );
 
-  router.get(
-    "/google/callback",
-    passport.authenticate("google", {
-      session: false,
-      failureRedirect: `${process.env.FRONTEND_URL}/login?error=oauth_failed`,
-    }),
-    (req, res) => {
-      const token = issueTokenForUser(req.user);
-      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
-      res.redirect(`${frontendUrl}/login?token=${token}`);
-    }
-  );
+  router.get("/google/callback", (req, res, next) => {
+    const frontendUrl = getFrontendUrl(req);
+    passport.authenticate("google", { session: false }, (err, user) => {
+      if (err || !user) {
+        console.error("Google OAuth Error:", err);
+        return res.redirect(`${frontendUrl}/login?error=oauth_failed`);
+      }
+      const token = issueTokenForUser(user);
+      return res.redirect(`${frontendUrl}/login?token=${token}`);
+    })(req, res, next);
+  });
 } else {
   const prisma = require("../config/prisma");
 
@@ -37,6 +61,7 @@ if (googleOAuthEnabled()) {
   });
 
   router.get("/google/mock-callback", async (req, res) => {
+    const frontendUrl = getFrontendUrl(req);
     try {
       let user = await prisma.user.findUnique({ where: { email: "mockuser@example.com" } });
       if (!user) {
@@ -52,11 +77,9 @@ if (googleOAuthEnabled()) {
         });
       }
       const token = issueTokenForUser(user);
-      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
       res.redirect(`${frontendUrl}/login?token=${token}`);
     } catch (error) {
       console.error("Mock OAuth Callback Error:", error);
-      const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
       res.redirect(`${frontendUrl}/login?error=oauth_failed`);
     }
   });
