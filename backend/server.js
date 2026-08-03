@@ -1,6 +1,9 @@
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
+console.log("CLIENT ID:", process.env.GOOGLE_CLIENT_ID);
+console.log("SECRET:", process.env.GOOGLE_CLIENT_SECRET ? "FOUND" : "NOT FOUND");
+console.log("CALLBACK:", process.env.GOOGLE_CALLBACK_URL);
 
 const app = express();
 
