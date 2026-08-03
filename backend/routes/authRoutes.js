@@ -38,13 +38,30 @@ router.get("/me", requireAuth, getMe);
 
 if (googleOAuthEnabled()) {
   router.get(
-    "/google",
-    passport.authenticate("google", {
-      scope: ["profile", "email"],
-      prompt: "select_account",
-      session: false,
-    })
-  );
+  "/google",
+  (req, res, next) => {
+    console.log("========== GOOGLE OAUTH ==========");
+    console.log("GOOGLE_CLIENT_ID:", process.env.GOOGLE_CLIENT_ID);
+    console.log("GOOGLE_CALLBACK_URL:", process.env.GOOGLE_CALLBACK_URL);
+    console.log("Google Configured:", googleOAuthEnabled());
+    console.log("==================================");
+
+    next();
+  },
+  passport.authenticate("google", {
+    scope: ["profile", "email"],
+    prompt: "select_account",
+    session: false,
+  })
+);
+  // router.get(
+  //   "/google",
+  //   passport.authenticate("google", {
+  //     scope: ["profile", "email"],
+  //     prompt: "select_account",
+  //     session: false,
+  //   })
+  // );
 
   router.get("/google/callback", (req, res, next) => {
     const frontendUrl = getFrontendUrl(req);
