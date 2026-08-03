@@ -64,6 +64,7 @@ if (googleOAuthEnabled()) {
   // );
 
   router.get("/google/callback", (req, res, next) => {
+    console.log("GOOGLE CALLBACK HIT");
     const frontendUrl = getFrontendUrl(req);
     passport.authenticate("google", { session: false }, (err, user) => {
       if (err || !user) {
@@ -71,6 +72,7 @@ if (googleOAuthEnabled()) {
         return res.redirect(`${frontendUrl}/login?error=oauth_failed`);
       }
       const token = issueTokenForUser(user);
+      
       return res.redirect(`${frontendUrl}/login?token=${token}`);
     })(req, res, next);
   });
