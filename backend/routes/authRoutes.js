@@ -63,19 +63,29 @@ if (googleOAuthEnabled()) {
   //   })
   // );
 
-  router.get("/google/callback", (req, res, next) => {
-    console.log("GOOGLE CALLBACK HIT");
-    const frontendUrl = getFrontendUrl(req);
-    passport.authenticate("google", { session: false }, (err, user) => {
-      if (err || !user) {
-        console.error("Google OAuth Error:", err);
-        return res.redirect(`${frontendUrl}/login?error=oauth_failed`);
-      }
-      const token = issueTokenForUser(user);
-      
-      return res.redirect(`${frontendUrl}/login?token=${token}`);
-    })(req, res, next);
-  });
+ router.get("/google/callback", (req, res, next) => {
+  console.log("GOOGLE CALLBACK HIT");
+
+  const frontendUrl = getFrontendUrl(req);
+
+  passport.authenticate("google", { session: false }, (err, user) => {
+    console.log("Passport Error:", err);
+    console.log("User:", user);
+
+    if (err || !user) {
+      console.error("Google OAuth Error:", err);
+      return res.redirect(`${frontendUrl}/login?error=oauth_failed`);
+    }
+
+    const token = issueTokenForUser(user);
+
+    console.log("Frontend URL:", frontendUrl);
+    console.log("Redirect URL:", `${frontendUrl}/login?token=${token}`);
+
+    return res.redirect(`${frontendUrl}/login?token=${token}`);
+  })(req, res, next);
+});
+
 } else {
   const prisma = require("../config/prisma");
 
