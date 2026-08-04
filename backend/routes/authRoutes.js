@@ -7,29 +7,33 @@ const { validateRegister, validateLogin } = require("../middleware/validateAuth"
 const { authLimiter } = require("../middleware/rateLimiter");
 const { passport, googleOAuthEnabled, issueTokenForUser } = require("../config/passport");
 
-const getFrontendUrl = (req) => {
-  const referer = req?.headers?.referer || req?.headers?.origin;
-  if (referer) {
-    try {
-      const urlObj = new URL(referer);
-      if (urlObj.hostname !== "localhost" && urlObj.hostname !== "127.0.0.1") {
-        return urlObj.origin;
-      }
-    } catch {
-      // invalid URL header
-    }
-  }
+// const getFrontendUrl = (req) => {
+//   const referer = req?.headers?.referer || req?.headers?.origin;
+//   if (referer) {
+//     try {
+//       const urlObj = new URL(referer);
+//       if (urlObj.hostname !== "localhost" && urlObj.hostname !== "127.0.0.1") {
+//         return urlObj.origin;
+//       }
+//     } catch {
+//       // invalid URL header
+//     }
+//   }
 
-  const envUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "";
-  if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
-    return envUrl;
-  }
+//   const envUrl = process.env.FRONTEND_URL ? process.env.FRONTEND_URL.replace(/\/$/, "") : "";
+//   if (envUrl && !envUrl.includes("localhost") && !envUrl.includes("127.0.0.1")) {
+//     return envUrl;
+//   }
 
-  if (envUrl) {
-    return envUrl;
-  }
+//   if (envUrl) {
+//     return envUrl;
+//   }
 
-  return "http://localhost:5173";
+//   return "http://localhost:5173";
+// };
+
+const getFrontendUrl = () => {
+  return process.env.FRONTEND_URL?.replace(/\/$/, "") || "http://localhost:5173";
 };
 
 router.post("/register", authLimiter, validateRegister, register);
@@ -66,7 +70,7 @@ if (googleOAuthEnabled()) {
  router.get("/google/callback", (req, res, next) => {
   console.log("GOOGLE CALLBACK HIT");
 
-  const frontendUrl = getFrontendUrl(req);
+  const frontendUrl = getFrontendUrl();
 
   passport.authenticate("google", { session: false }, (err, user) => {
     console.log("Passport Error:", err);
@@ -94,7 +98,7 @@ if (googleOAuthEnabled()) {
   });
 
   router.get("/google/mock-callback", async (req, res) => {
-    const frontendUrl = getFrontendUrl(req);
+    const frontendUrl = getFrontendUrl();
     try {
       let user = await prisma.user.findUnique({ where: { email: "mockuser@example.com" } });
       if (!user) {
