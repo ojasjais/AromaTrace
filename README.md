@@ -40,13 +40,11 @@ AromaTrace is a modern full-stack application designed to simplify essential oil
 
 AromaTrace includes a secure authentication system with:
 
-- User Registration
-- User Login
-- JWT-based Authentication
-- Password Hashing using bcrypt
+- Email & Password Authentication
+- Google OAuth 2.0 Login
+- JWT Authentication
 - Protected Routes
-- Google OAuth (Mock)
-- Authenticated User Profile Endpoint
+- Persistent Login Sessions
 
 ---
 
