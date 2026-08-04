@@ -73,7 +73,12 @@ if (googleOAuthEnabled()) {
   const frontendUrl = getFrontendUrl();
 
   passport.authenticate("google", { session: false }, (err, user) => {
-    console.log("Passport Error:", err);
+    console.error("Passport Error:", err);
+
+if (err) {
+  console.error("Error message:", err.message);
+  console.error("Error stack:", err.stack);
+}
     console.log("User:", user);
 
     if (err || !user) {
