@@ -5,6 +5,8 @@
 AromaTrace is a modern full-stack application designed to simplify essential oil batch management with secure JWT authentication, production tracking, and an intuitive SaaS dashboard. Users can create, update, delete, search, and monitor production batches through a responsive React frontend backed by an Express.js REST API and a PostgreSQL database managed with Prisma ORM.
 
 ---
+**Version:** 1.0.0  
+**Status:** ✅ Production Ready
 
 ## ✨ Features
 
@@ -26,7 +28,7 @@ AromaTrace is a modern full-stack application designed to simplify essential oil
 - 🔑 User Login
 - 🛡 Protected Routes
 - 🔒 Password Hashing (bcrypt)
-- 🌐 Google OAuth (Mock)
+- 🌐 Google OAuth 2.0
 - 🔐 REST API using Express & Prisma
 - 🤖 AI Batch Insights (Google Gemini)
 - 🌿 Botanical Profile Analysis
@@ -35,6 +37,15 @@ AromaTrace is a modern full-stack application designed to simplify essential oil
 - ❓ Custom AI Batch Questions
 - ⏳ AI Loading States & Error Handling
 
+## 🚀 Production Features
+
+- Public Cloud Deployment
+- Google OAuth 2.0 Authentication
+- Environment Variable Configuration
+- Secure REST API
+- Production Build Optimization
+- CORS Configuration
+- Render + Vercel Integration
 
 ## 🔐 Authentication
 
@@ -75,16 +86,12 @@ Complete prompt templates, example inputs, example outputs, evaluation, and anal
 
 ## 🛠 Tech Stack
 
----
-
 ### Frontend
 
 - React
 - Vite
 - Tailwind CSS
-- Framer Motion
 - React Router
-- Lucide React
 
 ### Backend
 
@@ -96,6 +103,11 @@ Complete prompt templates, example inputs, example outputs, evaluation, and anal
 - JWT Authentication
 - bcryptjs
 - Passport.js
+
+### AI
+
+- Google Gemini API
+- Prompt Engineering
 
 
 ## 🗄 Database Choice
@@ -130,7 +142,7 @@ aromatrace/
 |   |── prisma/
 |   |── routes/
 ```
-
+> The project is organized into separate frontend and backend applications for easier development, deployment, and maintenance.
 ---
 
 ## 📌 REST API
@@ -138,16 +150,16 @@ aromatrace/
 | Method | Endpoint | Description |
 |---------|----------|-------------|
 | POST | /api/auth/register | Register new user |
-| POST | /api/auth/login | User login |
-| GET | /api/auth/me | Get authenticated user |
-| GET | /api/auth/google | Google OAuth Login |
-| GET | /api/batches | Get all batches |
-| GET | /api/batches/:id | Get single batch |
+| POST | /api/auth/login  | User login |
+| GET  | /api/auth/me  | Get authenticated user |
+| GET  | /api/auth/google | Google OAuth Login |
+| GET  | /api/batches | Get all batches |
+| GET  | /api/batches/:id | Get single batch |
 | POST | /api/batches | Create batch |
-| PUT | /api/batches/:id | Update batch |
+| PUT  | /api/batches/:id | Update batch |
 | DELETE | /api/batches/:id | Delete batch |
-| GET | /api/batches/search/:name | Search batches |
-| POST|/api/ai/insights |Generate AI-powered batch insights
+| GET  | /api/batches/search/:name | Search batches |
+| POST |/api/ai/insights |Generate AI-powered batch insights |
 
 ---
 
@@ -175,7 +187,21 @@ cd ../backend
 npm install
 npm run dev
 ```
+---
+   
+## Build for Production
 
+Frontend
+
+```bash
+npm run build
+```
+
+Backend
+
+```bash
+npm start
+```
 ---
 
 ## 🔑 Environment Variables
@@ -203,6 +229,21 @@ Frontend `.env`
 ```env
 VITE_API_URL=http://localhost:5000/api
 
+```
+
+### Production
+
+Backend
+
+```env
+FRONTEND_URL=https://aroma-trace.vercel.app
+GOOGLE_CALLBACK_URL=https://aromatrace-ezwn.onrender.com/api/auth/google/callback
+```
+
+Frontend
+
+```env
+VITE_API_URL=https://aromatrace-ezwn.onrender.com/api
 ```
 
 ## 🔒 Security & Production Readiness (Week 8)
@@ -259,20 +300,39 @@ VITE_API_URL=http://localhost:5000/api
 
 ![Custom Query](images/ai-custom-query.png)
 
+### Google OAuth Login
+
+![Google OAuth](images/google-oauth.png)
+
 ---
 
 ## ☁️ Deployment
 
-- **Frontend:** Vercel
-- **Backend:** Render
-- **Database:** Supabase PostgreSQL
+| Service | Platform |
+|----------|----------|
+| Frontend | Vercel |
+| Backend | Render |
+| Database | Supabase PostgreSQL |
+| Authentication | JWT + Google OAuth 2.0 |
+| AI | Google Gemini API |
 
 ## 🌐 Live Demo
 
-- **Frontend:** https://aroma-trace.vercel.app
-- **Backend API:** https://aromatrace.onrender.com
+### Live Frontend
+
+https://aroma-trace.vercel.app
+
+### Live Backend API
+
+https://aromatrace-ezwn.onrender.com
 
 ---
+
+## ⚠️ Known Limitations
+
+- Render free tier automatically spins down after periods of inactivity.
+- The first backend request after inactivity may take 30–60 seconds while the server wakes up.
+- Google OAuth requires an active internet connection and a valid Google account.
 
 ## 👨‍💻 Author
 
