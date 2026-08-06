@@ -1,4 +1,4 @@
-const API_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
+const API_URL = `${import.meta.env.VITE_API_URL}/auth`;
 
 const TOKEN_KEY = "token";
 
@@ -66,4 +66,4 @@ export const logout = () => {
   setStoredToken(null);
 };
 
-export const getGoogleAuthUrl = () => `${import.meta.env.VITE_API_URL}/api/auth/google`;
+export const getGoogleAuthUrl = () => `${import.meta.env.VITE_API_URL}/google`;
