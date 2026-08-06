@@ -66,4 +66,4 @@ export const logout = () => {
   setStoredToken(null);
 };
 
-export const getGoogleAuthUrl = () => `${import.meta.env.VITE_API_URL}/google`;
+export const getGoogleAuthUrl = () => `${import.meta.env.VITE_API_URL}/auth/google`;
