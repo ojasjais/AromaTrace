@@ -230,6 +230,12 @@ const requestBody = {
         });
       }
 
+      if (response.status === 503) {
+  return res.status(503).json({
+    message: "AI service is temporarily busy. Please wait a few seconds and try again."
+  });
+}
+
       if (response.status === 403 || response.status === 400) {
         return res.status(400).json({
           message: "AI configuration error. Please verify the GEMINI_API_KEY in the backend .env configuration."
