@@ -7,6 +7,8 @@ console.log("CALLBACK:", process.env.GOOGLE_CALLBACK_URL);
 
 const app = express();
 
+app.set("trust proxy", 1);
+
 const allowedOrigins = [
   process.env.FRONTEND_URL,
   "http://localhost:5173",
