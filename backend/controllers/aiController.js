@@ -188,20 +188,16 @@ Format with clean markdown headings, bold text, and bullet points.
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), 10000);
 
-    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
+    const apiURL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${apiKey}`;
 
-    const requestBody = {
-      contents: [
-        {
-          role: "user",
-          parts: [{ text: `${systemInstruction}\n\n${prompt}` }]
-        }
-      ],
-      generationConfig: {
-        temperature: 0.3,
-        maxOutputTokens: 1024,
-      }
-    };
+const requestBody = {
+  contents: [
+    {
+      role: "user",
+      parts: [{ text: `${systemInstruction}\n\n${prompt}` }]
+    }
+  ]
+};
 
     let response;
     try {
